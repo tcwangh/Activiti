@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
+  <process id="loanrequest_v1" name="loan_request_v1" isExecutable="true">
+    <startEvent id="sid-3371E92F-28BA-40BD-A72C-BCBC1B39B547">
+      <extensionElements>
+        <activiti:formProperty id="name" name="Name" type="string" required="true"></activiti:formProperty>
+        <activiti:formProperty id="emailAddress" name="Email Address" type="string" required="true"></activiti:formProperty>
+        <activiti:formProperty id="income" name="Income" type="long" required="true"></activiti:formProperty>
+        <activiti:formProperty id="loanAmount" name="Loan amount" type="long" required="true"></activiti:formProperty>
+      </extensionElements>
+    </startEvent>
+    <endEvent id="sid-DE846D7E-6429-4C31-BD48-8239AB39F633"></endEvent>
+    <scriptTask id="checkCredit" name="checkCredit" scriptFormat="groovy" activiti:autoStoreVariables="false">
+      <script>out:println "Checking credit for " + name;
+creditCheckOK=false;
+if ((income / 2)&gt; loanAmount ) {
+    creditCheckOK=true;
+}
+out:println "Checked credit for " + name + " outcome is " + creditCheckOK;
+execution.setVariable("creditCheckOK",creditCheckOK);</script>
+    </scriptTask>
+    <serviceTask id="createApplication" name="createApplication" activiti:class="idv.tim.activiti.CreateApplicationTask"></serviceTask>
+    <sequenceFlow id="sid-DACEEBD8-2B48-48D5-95F5-B8FE8E174EB3" sourceRef="sid-3371E92F-28BA-40BD-A72C-BCBC1B39B547" targetRef="checkCredit"></sequenceFlow>
+    <sequenceFlow id="flow1" sourceRef="checkCredit" targetRef="createApplication"></sequenceFlow>
+    <sequenceFlow id="flow2" sourceRef="createApplication" targetRef="sid-DE846D7E-6429-4C31-BD48-8239AB39F633"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_loanrequest_v1">
+    <bpmndi:BPMNPlane bpmnElement="loanrequest_v1" id="BPMNPlane_loanrequest_v1">
+      <bpmndi:BPMNShape bpmnElement="sid-3371E92F-28BA-40BD-A72C-BCBC1B39B547" id="BPMNShape_sid-3371E92F-28BA-40BD-A72C-BCBC1B39B547">
+        <omgdc:Bounds height="35.0" width="35.0" x="61.0" y="72.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-DE846D7E-6429-4C31-BD48-8239AB39F633" id="BPMNShape_sid-DE846D7E-6429-4C31-BD48-8239AB39F633">
+        <omgdc:Bounds height="35.0" width="35.0" x="510.0" y="73.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="checkCredit" id="BPMNShape_checkCredit">
+        <omgdc:Bounds height="80.0" width="100.0" x="166.0" y="50.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="createApplication" id="BPMNShape_createApplication">
+        <omgdc:Bounds height="80.0" width="100.0" x="332.0" y="50.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-DACEEBD8-2B48-48D5-95F5-B8FE8E174EB3" id="BPMNEdge_sid-DACEEBD8-2B48-48D5-95F5-B8FE8E174EB3">
+        <omgdi:waypoint x="96.0" y="89.0"></omgdi:waypoint>
+        <omgdi:waypoint x="166.0" y="90.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="266.0" y="90.0"></omgdi:waypoint>
+        <omgdi:waypoint x="332.0" y="90.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow2" id="BPMNEdge_flow2">
+        <omgdi:waypoint x="432.0" y="90.0"></omgdi:waypoint>
+        <omgdi:waypoint x="510.0" y="90.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
